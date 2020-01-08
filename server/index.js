@@ -5,9 +5,11 @@ const routes = require('../routes/routes')
 const session = require('express-session')
 const mong = require('mongoose')
 
+/*IK i shouldn't do this but it's just a demo DB*/
+const key = "mongodb+srv://xoxo:xoxo6521@cluster0-anqbr.mongodb.net/test?retryWrites=true&w=majority"
 
 //connecting to Mongodb
-mong.connect(process.env.MONGOURI,{useNewUrlParser: true,useUnifiedTopology: true} )
+mong.connect(key,{useNewUrlParser: true,useUnifiedTopology: true} )
 .then(()=>console.log('Connected to db'))
 .catch(e => console.log(e))
 
