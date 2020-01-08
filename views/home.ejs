@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <style>
+      #shops
+      {
+        text-align: center;
+        margin-top:5%;
+        
+
+      }
+
+      .shop {
+         display: inline-block;
+         width: 400px;
+         height: 200px;
+         text-align: left;
+
+        }
+        .shop img {
+          float: left;
+
+        }
+
+
+    
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>Home</title>
+    <script>
+
+
+      window.onload = function() {//Waiting page to finish loading
+        //Nearby shops functions
+        async function getShops(){
+            let reponse = await fetch('/shops/all')//getting shops from api
+            let data = await reponse.json()//creating a real array of objects from the response
+            data.forEach(x=>x.location.distance = Math.sqrt(Math.pow((1-x.location.coordinates[0]),2)+Math.pow((1-x.location.coordinates[1]),2)))//adding a distance propriety to the location object by calculating distance between User Location which i considred it as Point (1,1) and the shop location Point(x,y) 
+            return sortByLocation(data)//returning the sorted Array as a Promise
+        }
+        function sortByLocation(arr) {
+          return arr.sort((a, b) => a['location']['distance'] - b['location']['distance']);//sorting array objects based on the location.distance propriety 
+        }
+      function Display()
+      {
+        
+        getShops().then(s=>{//displaying each object in the array after the getshops() promise is resolved
+          shops.textContent='';//clearing the shops div 
+          /*
+          displaying data in the shops div
+          while adding a button element to each shop div
+          button onclick=fetch('/shops/like/${x._id}')
+          so we can add the shop to current user fav shops
+          using fetch to send the request to our shops/like/... api
+          and disabling the button after that
+          */
+          s.forEach(x=>shops.innerHTML += `<div class="shop"><img src="${x.picture}"><ul><strong>Name</strong>:${x.name}</ul><ul><strong>City</strong>:${x.city}</ul><strong>Distance</strong>:${x.location.distance}</ul><br><br><br><br><br><ul><button onclick="fetch('/shops/like/${x._id}');this.textContent='Done !';this.disabled=true" class="btn btn-success btn-sm">Add to fav</button></ul></div>`)})
+
+      }
+
+      //preferred shops functions
+      async function getFav()
+      {
+        let rep = await fetch('/shops/fav')//getting current user favourite shops from the api
+        let data = await rep.json()//creating a real Array of objects so we can iterate through it and stuffs
+        return data
+
+      }
+      function DisplayFav()
+      {        
+        getFav().then(s=>{//displaying each object in the array after the getshops() promise is resolved
+          shops.textContent='';//clearing the shop div
+          s.forEach(x=>shops.innerHTML += `<div class="shop"><img src="${x.picture}"><ul><strong>Name</strong>:${x.name}</ul><ul><strong>City</strong>:${x.city}</ul><ul><strong>Email</strong>:${x.email}</ul><br><br><br></br><ul><button onclick="fetch('/shops/del/${x._id}');this.textContent='Done !';this.disabled=true" class="btn btn-danger btn-sm">Remove</button></ul><br><br></div>`)})
+
+      }
+
+        //fav and near are to "a" element with fav and near as their id 
+        near.onclick = function() {Display();shops.textContent="Please Wait ...";}//displaying neabry shops
+        fav.onclick = function() {DisplayFav();shops.textContent="Please Wait ...";}//displaying favourite shops
+      }
+       
+        
+        
+        </script>
+</head>
+<body>
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand">Hi <%=user.email%></a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a id="near" style = "cursor:pointer">Nearby shops</a></li>
+        <li><a id="fav" style = "cursor:pointer">My preferred shops</a></li>
+        <li><a href="/logout" >Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+<div id="shops">
+</div>
+
+
+</body>
+</html>
+
+

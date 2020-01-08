@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .login-container{
+            background:white;
+            width:300px;
+            border-radius:6px;
+            margin: 15% auto auto auto;
+            padding:5px 5px 5px 5px;
+            border: #2980b9 4px solid; 
+        }
+         .login-container button {
+            border:none;
+            color:white;
+            background-color:black;
+
+        }
+    
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Register Page</title>
+</head>
+<body>
+
+    <div class="login-container">
+            <form method="post" action="/register">
+                    <div class="form-group">
+                        
+                            <%if(typeof errors!='undefined'){%>
+                                <%errors.forEach(x=>{%>
+                            <div class="alert alert-danger" role="alert">
+                                <%=x.msg%>
+                            </div>
+                                
+                                <%})%>
+                                <%}%>
+                      <label>Email address</label>
+                      <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+                      <label>Password</label>
+                      <input type="password" class="form-control" name="password" placeholder="Password">
+                    <label>Confirm Password</label>
+                      <input type="password" class="form-control" name="pass2" placeholder="Confim Password">
+                      <br>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <a href="login">Already have an account ? </a>
+                  </form>
+    </div>
+</body>
+</html>
